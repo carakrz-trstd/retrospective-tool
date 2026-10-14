@@ -1,0 +1,97 @@
+{
+  "id": "start-stop-continue",
+  "name": "Start-Stop-Continue",
+  "description": "A simple, general-purpose format: the team says what it wants to start doing, stop doing and keep doing. A good default when you are unsure which format to pick.",
+  "columns": [
+    {
+      "id": "start",
+      "name": "Start",
+      "prompt": "What should we begin doing that we are not doing yet?"
+    },
+    {
+      "id": "stop",
+      "name": "Stop",
+      "prompt": "What should we stop doing because it does not help us?"
+    },
+    {
+      "id": "continue",
+      "name": "Continue",
+      "prompt": "What is working well and should we keep doing?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 5,
+        "reveal": 3,
+        "discuss": 8
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 8,
+        "reveal": 5,
+        "discuss": 14
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 10,
+        "reveal": 8,
+        "discuss": 27
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 3,
+      "tired": 2,
+      "tense": 2
+    },
+    "goal": {
+      "fun": 1,
+      "bond": 1,
+      "reflect-period": 2,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 3,
+      "extensive": 1
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "neutral": "Three clear columns work for almost any team."
+    },
+    "goal": {
+      "reflect-period": "It looks back and turns it into changes.",
+      "reflect-project": "It turns what happened into clear next steps."
+    }
+  },
+  "checkInQuestion": "In one word: how are you arriving today?",
+  "facilitationTips": [
+    "Explain the three columns in one sentence each before the writing starts.",
+    "Ask everyone to write at least one note per column so quiet people get a voice.",
+    "In the discussion, begin with the Stop column: it often holds the most useful topics."
+  ]
+}

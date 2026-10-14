@@ -1,0 +1,103 @@
+{
+  "id": "three-little-pigs",
+  "name": "Three Little Pigs",
+  "description": "The team rates its work as a house of straw, sticks or bricks: how solid is it? A fun picture that makes quality and risks easy to talk about.",
+  "source": {
+    "name": "funretrospectives.com",
+    "url": "https://www.funretrospectives.com/three-little-pigs/"
+  },
+  "columns": [
+    {
+      "id": "straw",
+      "name": "Straw",
+      "prompt": "What is weak and could fall over easily?"
+    },
+    {
+      "id": "sticks",
+      "name": "Sticks",
+      "prompt": "What is okay but could be stronger?"
+    },
+    {
+      "id": "bricks",
+      "name": "Bricks",
+      "prompt": "What is solid and we can rely on?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 4,
+        "reveal": 3,
+        "discuss": 9
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 8,
+        "reveal": 5,
+        "discuss": 14
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 11,
+        "reveal": 8,
+        "discuss": 26
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 3,
+      "neutral": 2,
+      "tired": 1,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 3,
+      "bond": 2,
+      "reflect-period": 1,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 2,
+      "extensive": 2
+    },
+    "setting": {
+      "in-room": 3,
+      "remote": 1
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "A story everybody knows, light and fun.",
+      "neutral": "Easy to understand for everyone."
+    },
+    "goal": {
+      "fun": "The fairy tale makes it playful.",
+      "bond": "A shared story gets the team laughing.",
+      "reflect-project": "Shows how solid the work is."
+    }
+  },
+  "checkInQuestion": "Which fairy tale or story character are you today, and why?",
+  "facilitationTips": [
+    "Retell the story in a few words so everyone has the picture.",
+    "Place sticky notes on a drawn house or a three-part board.",
+    "End with how to turn straw into bricks: choose one thing to strengthen."
+  ]
+}

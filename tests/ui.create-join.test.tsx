@@ -4,7 +4,7 @@ import { render } from '@testing-library/preact';
 import { App } from '../src/app/App';
 import { JOIN_CODE_ALPHABET } from '../src/core/ids';
 import { MemoryNetwork } from '../src/transport/MemoryTransport';
-import { makeApp, renderApp } from './appHelpers';
+import { chooseFormat, makeApp, renderApp } from './appHelpers';
 import { joinClient, makeDevice, startHost } from './sessionHelpers';
 
 afterEach(() => cleanup());
@@ -15,8 +15,9 @@ function fill(label: string, value: string) {
 
 describe('create session screen', () => {
   it('blocks submit with messages when name or role is empty', async () => {
-    renderApp(makeApp(new MemoryNetwork()));
-    fireEvent.click(screen.getByRole('button', { name: 'Create session' }));
+    const t = makeApp(new MemoryNetwork());
+    renderApp(t);
+    chooseFormat(t.app);
     await screen.findByLabelText('Your name');
     fireEvent.submit(document.querySelector('form')!);
     expect(await screen.findByText('Please enter your name.')).toBeTruthy();
@@ -28,7 +29,8 @@ describe('create session screen', () => {
   it('creates the session: the lobby shows the link, a 6-character code, copy buttons and the Facilitator badge', async () => {
     const t = makeApp(new MemoryNetwork());
     renderApp(t);
-    fireEvent.click(screen.getByRole('button', { name: 'Create session' }));
+    chooseFormat(t.app);
+    await screen.findByLabelText('Your name');
     fill('Your name', 'Fiona');
     fill('Your role', 'Scrum Master');
     fill('Session title (optional)', 'Team Alpha');
@@ -52,8 +54,10 @@ describe('create session screen', () => {
     const net = new MemoryNetwork();
     const device = makeDevice(net);
     device.store.saveIdentity({ name: 'Fiona', role: 'Scrum Master' });
-    renderApp(makeApp(net, { device }));
-    fireEvent.click(screen.getByRole('button', { name: 'Create session' }));
+    const t = makeApp(net, { device });
+    renderApp(t);
+    chooseFormat(t.app);
+    await screen.findByLabelText('Your name');
     expect((screen.getByLabelText('Your name') as HTMLInputElement).value).toBe('Fiona');
     expect((screen.getByLabelText('Your role') as HTMLInputElement).value).toBe('Scrum Master');
     fireEvent.click(screen.getByRole('button', { name: 'Forget me' }));
@@ -124,6 +128,7 @@ describe('two apps side by side (Facilitator and participant)', () => {
       container: document.body.appendChild(document.createElement('div')),
     });
     f.app.boot();
+    chooseFormat(f.app);
     await f.app.createSession({ name: 'Fiona', role: 'Scrum Master' });
     const fq = within(fView.container as HTMLElement);
     await fq.findByRole('heading', { name: 'Lobby' });

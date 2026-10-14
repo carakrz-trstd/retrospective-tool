@@ -1,6 +1,7 @@
 import { useApp } from '../app/context';
 import { texts } from '../texts';
 import { EndSessionControl } from './EndSessionControl';
+import { FlowShell } from './flow/FlowShell';
 import { ParticipantList } from './ParticipantList';
 
 /** The running session. Later epics render the phases (flow, contributions) in the content area. */
@@ -18,9 +19,7 @@ export function SessionShell() {
           {state.format.name} · {state.timeBudgetMin} min
         </p>
       </header>
-      <main id="session-content" aria-label="Session content" class="content-area">
-        <p>{texts.sessionPlaceholder}</p>
-      </main>
+      <FlowShell />
       <ParticipantList />
       <div class="row">
         {isHost ? (

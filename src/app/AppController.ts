@@ -1,23 +1,31 @@
 // The application layer: ties the router, the local storage, the tab guard, the host controller
 // (Facilitator) and the client controller (participant) to a few signals that the screens read.
 
-import { signal, type Signal } from '@preact/signals';
 import {
   ClientController,
   ClientFailure,
   type ClientSnapshot,
   type ClientStatus,
 } from '../client/ClientController';
-import { placeholderFormat, placeholderTimeBudget } from '../core/placeholderFormat';
 import type { SessionState } from '../core/types';
+import { registerFlow } from '../flow';
+import { HostClock } from '../flow/clock';
+import { FLOW_KEY, getFlow, initialFlow } from '../flow/flowState';
+import { getLocalMuted, setLocalMuted as saveLocalMuted } from '../flow/prefs';
+import { SoundPlayer, installUnlockOnFirstGesture } from '../flow/sound';
+import { suggestedMs } from '../flow/suggested';
+import type { FlowState, StopId } from '../flow/types';
+import type { ChosenFormat } from '../formats/types';
+import { FormatFlow } from '../ui/format/flow';
 import { HostController, type ListeningStatus } from '../host/HostController';
 import type { Identity, Store } from '../storage/storage';
 import type { TabGuard } from '../tabs/TabGuard';
 import type { Transport } from '../transport/Transport';
 import { texts } from '../texts';
-import { joinLink, type Route, type Router } from './router';
+import { ref } from '../ui/ref';
+import { joinLink, newHash, type Route, type Router } from './router';
 
-export type Screen = 'home' | 'create' | 'join' | 'lobby' | 'session' | 'ended' | 'removed';
+export type Screen = 'home' | 'new' | 'create' | 'join' | 'lobby' | 'session' | 'ended' | 'removed';
 
 export interface AppServices {
   createTransport: () => Transport;
@@ -27,6 +35,8 @@ export interface AppServices {
   /** The page address without the hash, used for the join link. */
   baseUrl: () => string;
   hostOfflineHintMs?: number;
+  /** The end-of-time beep (tests inject a fake). */
+  sound?: Pick<SoundPlayer, 'unlock' | 'beep'>;
 }
 
 export interface ConnectionInfo {
@@ -84,7 +94,25 @@ export class AppController {
   private unsubs: (() => void)[] = [];
   private sessionId: string | null = null;
 
-  constructor(private readonly services: AppServices) {}
+  /** The format selection (questionnaire, suggestion, library, custom format). */
+  readonly flow: FormatFlow;
+
+  /** Estimates the host's time on this device (the Facilitator's device uses its own clock). */
+  clock = new HostClock();
+  readonly sound: Pick<SoundPlayer, 'unlock' | 'beep'>;
+  /** This device's own sound mute (stored in retro.prefs). */
+  readonly localMuted = ref(getLocalMuted());
+  /** The stop at which the Facilitator is told that the entries became visible (AD-16). */
+  readonly revealNoteStop = ref<StopId | null>(null);
+
+  constructor(private readonly services: AppServices) {
+    registerFlow();
+    this.sound = services.sound ?? new SoundPlayer();
+    this.flow = new FormatFlow({
+      onChosen: (chosen) => this.onFormatChosen(chosen),
+      onStep: (step, formatId) => this.services.router.replace(newHash(step, formatId)),
+    });
+  }
 
   // ---- start ------------------------------------------------------------------------------
 
@@ -94,10 +122,15 @@ export class AppController {
     this.storageOk.set(store.isAvailable());
     store.sweepExpired();
     store.deleteUnreadable();
+    if (!this.services.sound && typeof window !== 'undefined') installUnlockOnFirstGesture(this.sound);
     this.refreshOffers();
     this.identity.set(store.loadIdentity());
 
     const route = router.current();
+    if (route.name === 'new') {
+      this.enterNew(route);
+      return;
+    }
     if (route.name === 'join') {
       this.joinTarget.set(route.target);
       this.screen.set('join');
@@ -109,7 +142,8 @@ export class AppController {
       this.rejoin(active);
       return;
     }
-    this.screen.set(route.name === 'create' ? 'create' : 'home');
+    if (route.name === 'create') this.goCreate();
+    else this.screen.set('home');
   }
 
   /** The address bar changed (for example somebody pasted a join link into this tab). */
@@ -119,8 +153,11 @@ export class AppController {
     if (route.name === 'join') {
       if (route.target) this.joinTarget.set(route.target);
       this.screen.set('join');
+    } else if (route.name === 'new') {
+      this.enterNew(route);
     } else if (route.name === 'create') {
-      this.screen.set('create');
+      if (this.flow.chosen.value) this.screen.set('create');
+      else this.goNew();
     } else if (route.name === 'home') {
       this.refreshOffers();
       this.screen.set('home');
@@ -164,7 +201,31 @@ export class AppController {
     this.screen.set('home');
   }
 
+  /** The address points into the format selection: show it (or start over when data is missing). */
+  private enterNew(route: Extract<Route, { name: 'new' }>): void {
+    if (route.step === 'details' && route.formatId) this.flow.detailsId.set(route.formatId);
+    this.flow.guard(route.step);
+    this.screen.set('new');
+  }
+
+  /** "Create session" starts with the format selection. */
+  goNew(): void {
+    this.detach();
+    this.sessionId = null;
+    this.formError.set(null);
+    this.flow.reset();
+    this.screen.set('new');
+  }
+
+  /** The format is chosen: now the Facilitator enters name, role and an optional title. */
+  private onFormatChosen(_chosen: ChosenFormat): void {
+    this.formError.set(null);
+    this.services.router.replace('#/create');
+    this.screen.set('create');
+  }
+
   goCreate(): void {
+    if (!this.flow.chosen.value) return this.goNew();
     this.formError.set(null);
     this.services.router.replace('#/create');
     this.screen.set('create');
@@ -193,14 +254,17 @@ export class AppController {
     this.formError.set(null);
     if (!input.name.trim()) return void this.formError.set(texts.nameRequired);
     if (!input.role.trim()) return void this.formError.set(texts.roleRequired);
+    const chosen = this.flow.chosen.value;
+    if (!chosen) return this.goNew();
+    this.sound.unlock();
     this.busy.set(true);
     const host = HostController.create(
       {
         name: input.name,
         role: input.role,
         title: input.title,
-        format: placeholderFormat,
-        timeBudgetMin: placeholderTimeBudget,
+        format: chosen.format,
+        timeBudgetMin: chosen.timeBudgetMin,
       },
       { transport: this.services.createTransport(), store: this.services.store },
     );
@@ -265,6 +329,7 @@ export class AppController {
   private attachHost(host: HostController): void {
     this.detach();
     this.host = host;
+    this.clock = new HostClock({ isHost: true });
     this.sessionId = host.data.state.sessionId;
     this.role.set('host');
     this.myParticipantId.set(host.facilitatorId);
@@ -310,14 +375,60 @@ export class AppController {
     this.host?.removeParticipant(participantId);
   }
 
+  // ---- guided flow (Epic 3) -----------------------------------------------------------------
+
+  /** The flow of the session as this device sees it. */
+  flowState(): FlowState {
+    const s = this.state.value;
+    return s ? getFlow(s) : initialFlow();
+  }
+
+  /** The Facilitator's contribution counts (only present in the Facilitator's view). */
+  flowCounts(): Partial<Record<'checkIn' | 'retro', { added: number; total: number }>> {
+    const slice = this.state.value?.extensions[FLOW_KEY] as { counts?: Record<string, never> } | undefined;
+    return (slice?.counts ?? {}) as never;
+  }
+
+  /** The suggested time of a stop, from the chosen format and the time budget. */
+  stopDuration(stop: StopId): number {
+    const s = this.state.value;
+    return s ? suggestedMs(stop, s.format, s.timeBudgetMin) : 0;
+  }
+
+  /** A flow action of the Facilitator (Facilitator-only: only the host device sends them). */
+  flowIntent(kind: string, payload: unknown = {}): boolean {
+    const host = this.host;
+    if (!host) return false;
+    const before = getFlow(host.view()).revealed.retro;
+    const result = host.applyLocalIntent(kind, payload);
+    if (!result.ok) return false;
+    const after = getFlow(host.view());
+    const moves = kind === 'flow.next' || kind === 'flow.prev' || kind === 'flow.goto';
+    this.revealNoteStop.set(moves && !before && after.revealed.retro ? after.stop : null);
+    return true;
+  }
+
+  /** An intent of a later module: the Facilitator applies it locally, a participant sends it to the host. */
+  sendIntent(kind: string, payload: unknown): void {
+    if (this.host) this.host.applyLocalIntent(kind, payload);
+    else this.client?.sendIntent(kind, payload);
+  }
+
+  setLocalMuted(muted: boolean): void {
+    this.localMuted.set(muted);
+    saveLocalMuted(muted);
+  }
+
   // ---- participant --------------------------------------------------------------------------
 
   async join(target: string, name: string, role: string): Promise<void> {
     this.formError.set(null);
     if (!name.trim()) return void this.formError.set(texts.nameRequired);
     if (!role.trim()) return void this.formError.set(texts.roleRequired);
+    this.sound.unlock();
     this.busy.set(true);
     const client = ClientController.join(target, { name, role }, this.clientOptions());
+    this.watchClock(client);
     try {
       await client.ready;
     } catch (err) {
@@ -338,7 +449,15 @@ export class AppController {
       this.refreshOffers();
       return;
     }
+    this.watchClock(client);
     this.attachClient(client, sessionId);
+  }
+
+  /** Every host message carries the host's time; it feeds the clock estimate (also the first one). */
+  private watchClock(client: ClientController): void {
+    const clock = new HostClock();
+    this.clock = clock;
+    client.onHostTime((hostTime, receivedAt) => clock.observe(hostTime, receivedAt));
   }
 
   private clientOptions() {
@@ -447,16 +566,4 @@ function failureText(err: unknown): string {
     }
   }
   return texts.unavailable;
-}
-
-/** A signal with a set() method, so the controller code reads "x.set(value)". */
-type Ref<T> = Signal<T> & { set(value: T): void };
-
-function ref<T>(initial: T): Ref<T> {
-  const s = signal(initial);
-  return Object.assign(s, {
-    set(value: T) {
-      s.value = value;
-    },
-  });
 }

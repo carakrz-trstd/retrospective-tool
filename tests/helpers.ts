@@ -1,16 +1,9 @@
-import type { FormatRef, HostData, SessionState } from '../src/core/types';
+import type { HostData, SessionState } from '../src/core/types';
 import { SESSION_SCHEMA_VERSION } from '../src/core/types';
 
-export const testFormat: FormatRef = {
-  id: 'start-stop-continue',
-  name: 'Start-Stop-Continue',
-  columns: [
-    { id: 'start', name: 'Start' },
-    { id: 'stop', name: 'Stop' },
-    { id: 'continue', name: 'Continue' },
-  ],
-  checkInQuestion: 'In one word: how are you arriving today?',
-};
+import { sampleFormat } from './formats/sample';
+
+export const testFormat = sampleFormat();
 
 export function makeState(overrides: Partial<SessionState> = {}): SessionState {
   return {

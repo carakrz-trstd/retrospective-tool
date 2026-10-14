@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { App } from '../src/app/App';
 import { registerEndGuard, resetRegistries } from '../src/core/registry';
 import { MemoryNetwork } from '../src/transport/MemoryTransport';
-import { makeApp, makeBrowser, renderApp, type TestApp } from './appHelpers';
+import { chooseFormat, makeApp, makeBrowser, renderApp, type TestApp } from './appHelpers';
 import { joinClient, startHost } from './sessionHelpers';
 
 afterEach(() => {
@@ -19,6 +19,7 @@ async function hostApp(net: MemoryNetwork, over: Parameters<typeof makeApp>[1] =
     container: document.body.appendChild(document.createElement('div')),
   });
   t.app.boot();
+  chooseFormat(t.app);
   await t.app.createSession({ name: 'Fiona', role: 'Scrum Master' });
   const q = within(view.container as HTMLElement);
   await q.findByRole('heading', { name: 'Lobby' });

@@ -5,13 +5,29 @@ export interface Invitation {
   code: string;
 }
 
-/** The Facilitator creates a session and lands in the lobby. */
+/** Answers the five questions, takes the suggestion and uses the recommended format. */
+export async function pickRecommendedFormat(
+  page: Page,
+  answers = ['Tired', 'Reflect on the period since the last retro', '30 minutes', 'Lean', 'Remote'],
+): Promise<string> {
+  for (const name of answers) await page.getByRole('radio', { name }).check();
+  await page.getByRole('button', { name: 'Show recommendation' }).click();
+  await expect(page.getByRole('heading', { name: 'Our suggestion' })).toBeVisible();
+  const first = page.getByRole('article').first();
+  const name = (await first.getByRole('heading', { level: 3 }).textContent()) ?? '';
+  await first.getByRole('button', { name: 'Use this format' }).click();
+  await expect(page.getByRole('heading', { name: 'Chosen format' })).toBeVisible();
+  return name;
+}
+
+/** The Facilitator chooses a format, creates a session and lands in the lobby. */
 export async function createSession(
   page: Page,
   options: { name: string; role: string; title?: string },
 ): Promise<Invitation> {
   await page.goto('/');
   await page.getByRole('button', { name: 'Create session' }).first().click();
+  await pickRecommendedFormat(page);
   await page.getByLabel('Your name').fill(options.name);
   await page.getByLabel('Your role').fill(options.role);
   if (options.title) await page.getByLabel('Session title (optional)').fill(options.title);

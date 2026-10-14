@@ -1,5 +1,5 @@
 import { expect, test, type Browser, type BrowserContext, type Page, type Request } from '@playwright/test';
-import { createSession, joinByCode, joinByLink, localStorageKeys, type Invitation } from './helpers';
+import { joinByCode, joinByLink, localStorageKeys, pickRecommendedFormat, type Invitation } from './helpers';
 
 // One serial run through the journeys of Epic 1: Facilitator F "Fiona", participants A "Alex", B "Alex" (same name on
 // purpose) and later C and D. The e2e build uses a local signaling server (see playwright.config.ts).
@@ -47,6 +47,7 @@ test('J1 Create: the Facilitator creates a session (AC-1, AC-2, AC-5, AC-16, AC-
   await F.goto('/');
   await expect(F.getByText(/internal use only/i)).toBeVisible();
   await F.getByRole('button', { name: 'Create session' }).first().click();
+  await pickRecommendedFormat(F); // the format selection comes first (Epic 2)
   await F.getByRole('button', { name: 'Create session' }).last().click();
   await expect(F.getByText('Please enter your name.')).toBeVisible();
   await F.getByLabel('Your name').fill('Fiona');

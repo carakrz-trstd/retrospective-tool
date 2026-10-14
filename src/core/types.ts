@@ -3,7 +3,9 @@
 
 export const SESSION_SCHEMA_VERSION = 1;
 
-export type TimeBudget = 30 | 50 | 80;
+import type { Format, TimeBudget } from '../formats/types';
+
+export type { TimeBudget };
 
 export type SessionStatus = 'lobby' | 'running' | 'ended';
 
@@ -21,14 +23,6 @@ export interface Participant {
   joinedAt: number;
 }
 
-/** Placeholder structure until Epic 2 provides the real format (it is a subset of that format). */
-export interface FormatRef {
-  id: string;
-  name: string;
-  columns: { id: string; name: string; prompt?: string }[];
-  checkInQuestion: string;
-}
-
 export interface SessionState {
   schemaVersion: number;
   /** Host revision: increases with every accepted change. */
@@ -38,7 +32,7 @@ export interface SessionState {
   title?: string;
   createdAt: number;
   status: SessionStatus;
-  format: FormatRef;
+  format: Format;
   timeBudgetMin: TimeBudget;
   participants: Record<string, Participant>;
   /** Slices owned by later epics (phase, entries, notes, ...). */

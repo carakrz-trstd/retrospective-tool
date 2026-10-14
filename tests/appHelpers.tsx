@@ -2,6 +2,8 @@ import { render } from '@testing-library/preact';
 import { App } from '../src/app/App';
 import { AppController, type AppServices } from '../src/app/AppController';
 import { parseHash, type Route, type Router } from '../src/app/router';
+import { getFormat } from '../src/formats/library';
+import type { TimeBudget } from '../src/formats/types';
 import { TabGuard } from '../src/tabs/TabGuard';
 import { MemoryNetwork, MemoryTransport } from '../src/transport/MemoryTransport';
 import { makeDevice, type Device } from './sessionHelpers';
@@ -82,4 +84,19 @@ export function makeApp(
 export function renderApp(testApp: TestApp) {
   testApp.app.boot();
   return render(<App controller={testApp.app} />);
+}
+
+/** Chooses a library format the way the format selection would (answers first, then "Use this format"). */
+export function chooseFormat(
+  app: AppController,
+  formatId = 'start-stop-continue',
+  budget: TimeBudget = 50,
+): void {
+  const flow = app.flow;
+  flow.setAnswer('mood', 'neutral');
+  flow.setAnswer('goal', 'reflect-period');
+  flow.setAnswer('timeBudgetMin', budget);
+  flow.setAnswer('depth', 'lean');
+  flow.setAnswer('setting', 'remote');
+  flow.useFormat(getFormat(formatId)!);
 }

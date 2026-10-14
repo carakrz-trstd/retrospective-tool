@@ -1,0 +1,97 @@
+{
+  "id": "mad-sad-glad",
+  "name": "Mad-Sad-Glad",
+  "description": "Team members sort their feelings about the last period into mad, sad and glad. It makes emotions easy to talk about, which helps when the team is tense or tired.",
+  "columns": [
+    {
+      "id": "mad",
+      "name": "Mad",
+      "prompt": "What frustrated or annoyed you?"
+    },
+    {
+      "id": "sad",
+      "name": "Sad",
+      "prompt": "What disappointed you or made you feel down?"
+    },
+    {
+      "id": "glad",
+      "name": "Glad",
+      "prompt": "What made you happy or proud?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 4,
+        "reveal": 3,
+        "discuss": 9
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 8,
+        "reveal": 5,
+        "discuss": 14
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 10,
+        "reveal": 8,
+        "discuss": 27
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 2,
+      "tired": 3,
+      "tense": 3
+    },
+    "goal": {
+      "fun": 1,
+      "bond": 2,
+      "reflect-period": 2,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 3,
+      "extensive": 1
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "tired": "Feelings are quick to write down and need little thinking.",
+      "tense": "Gives people a safe way to name what bothers them."
+    },
+    "goal": {
+      "bond": "Sharing feelings builds understanding."
+    }
+  },
+  "checkInQuestion": "Which weather describes your mood today: sunny, cloudy, rainy or stormy?",
+  "facilitationTips": [
+    "Say clearly that every feeling is welcome and nobody has to defend theirs.",
+    "Start the discussion with the Glad column so the session begins on a good note.",
+    "Focus on what causes a feeling, not on who is to blame."
+  ]
+}

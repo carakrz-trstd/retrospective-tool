@@ -3,16 +3,8 @@
 
 import { createUuid } from './ids';
 import { runRemovalHooks } from './registry';
-import type {
-  Effect,
-  FormatRef,
-  HostData,
-  Participant,
-  ReduceContext,
-  ReduceResult,
-  SessionState,
-  TimeBudget,
-} from './types';
+import type { Effect, HostData, Participant, ReduceContext, ReduceResult, SessionState } from './types';
+import type { Format, TimeBudget } from '../formats/types';
 import { SESSION_SCHEMA_VERSION } from './types';
 
 function fail(data: HostData, reason: string): ReduceResult {
@@ -70,7 +62,7 @@ export interface CreateSessionInput {
   name: string;
   role: string;
   title?: string;
-  format: FormatRef;
+  format: Format;
   timeBudgetMin: TimeBudget;
   sessionId: string;
   joinCode: string;

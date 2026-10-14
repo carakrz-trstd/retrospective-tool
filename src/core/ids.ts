@@ -52,6 +52,11 @@ export function createOpId(): string {
   return createUuid();
 }
 
+/** A short lower-case ID (letters and digits) for things like custom formats and columns. */
+export function createShortId(length = 8): string {
+  return randomString('abcdefghijklmnopqrstuvwxyz0123456789', length);
+}
+
 export function createJoinCode(): string {
   return randomString(JOIN_CODE_ALPHABET, JOIN_CODE_LENGTH);
 }

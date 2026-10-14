@@ -1,0 +1,93 @@
+{
+  "id": "4ls",
+  "name": "4Ls",
+  "description": "The team looks back on a piece of work through four questions: what it liked, learned, lacked and longed for. It suits a thoughtful look at a project.",
+  "source": {
+    "name": "funretrospectives.com",
+    "url": "https://www.funretrospectives.com/the-4-ls-liked-learned-lacked-longed-for/"
+  },
+  "columns": [
+    {
+      "id": "liked",
+      "name": "Liked",
+      "prompt": "What did you enjoy or appreciate?"
+    },
+    {
+      "id": "learned",
+      "name": "Learned",
+      "prompt": "What did you learn that you did not know before?"
+    },
+    {
+      "id": "lacked",
+      "name": "Lacked",
+      "prompt": "What was missing or got in your way?"
+    },
+    {
+      "id": "longed-for",
+      "name": "Longed for",
+      "prompt": "What did you wish for that we did not have?"
+    }
+  ],
+  "timeSplits": {
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 9,
+        "reveal": 5,
+        "discuss": 13
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 11,
+        "reveal": 8,
+        "discuss": 26
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 3,
+      "tired": 1,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 0,
+      "bond": 1,
+      "reflect-period": 2,
+      "reflect-project": 3
+    },
+    "depth": {
+      "lean": 1,
+      "extensive": 3
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "neutral": "Calm and structured, good for a focused team."
+    },
+    "goal": {
+      "reflect-project": "Four angles cover the whole project."
+    }
+  },
+  "checkInQuestion": "What is one thing from the project you are proud of?",
+  "facilitationTips": [
+    "Give an example for each of the four columns to get people started.",
+    "Tell the team that Lacked is about missing things, Longed for is about wishes.",
+    "Group similar notes together before you discuss them."
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "id": "sailboat",
+  "name": "Sailboat",
+  "description": "The team imagines itself on a sailboat: the wind pushes it forward, anchors hold it back, rocks are risks ahead, and the island is the goal. A playful way to look at a project.",
+  "columns": [
+    {
+      "id": "wind",
+      "name": "Wind",
+      "prompt": "What is pushing us forward and helping us?"
+    },
+    {
+      "id": "anchors",
+      "name": "Anchors",
+      "prompt": "What is slowing us down or holding us back?"
+    },
+    {
+      "id": "rocks",
+      "name": "Rocks",
+      "prompt": "What risks could hurt us in the future?"
+    },
+    {
+      "id": "island",
+      "name": "Island",
+      "prompt": "What is our goal and what does it look like?"
+    }
+  ],
+  "timeSplits": {
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 9,
+        "reveal": 5,
+        "discuss": 13
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 11,
+        "reveal": 8,
+        "discuss": 26
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 3,
+      "neutral": 2,
+      "tired": 1,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 2,
+      "bond": 2,
+      "reflect-period": 1,
+      "reflect-project": 3
+    },
+    "depth": {
+      "lean": 1,
+      "extensive": 3
+    },
+    "setting": {
+      "in-room": 3,
+      "remote": 1
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "A lively picture gets an energized team going."
+    },
+    "goal": {
+      "fun": "The sailing picture makes it playful.",
+      "bond": "Drawing the boat together is a shared activity.",
+      "reflect-project": "Looks at progress, obstacles and the goal."
+    }
+  },
+  "checkInQuestion": "If our team were a boat, what kind of boat would we be today?",
+  "facilitationTips": [
+    "Draw a boat, wind, anchors, rocks and an island on a whiteboard before people arrive.",
+    "Spend a minute on the island first so everybody shares the same goal.",
+    "Handle rocks last and decide who watches each risk."
+  ]
+}

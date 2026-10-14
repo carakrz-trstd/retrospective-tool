@@ -1,0 +1,82 @@
+{
+  "id": "kudos-cards",
+  "name": "Kudos Cards",
+  "description": "The team thanks each other: appreciation for the whole team and for individual people. It is short and warm and builds good relationships.",
+  "columns": [
+    {
+      "id": "kudos-for-the-team",
+      "name": "Kudos for the team",
+      "prompt": "What did we do well together that you appreciate?"
+    },
+    {
+      "id": "kudos-for-a-person",
+      "name": "Kudos for a person",
+      "prompt": "Who helped you and what did they do?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 4,
+        "reveal": 4,
+        "discuss": 8
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 8,
+        "reveal": 7,
+        "discuss": 12
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 2,
+      "tired": 3,
+      "tense": 2
+    },
+    "goal": {
+      "fun": 1,
+      "bond": 3,
+      "reflect-period": 0,
+      "reflect-project": 0
+    },
+    "depth": {
+      "lean": 3,
+      "extensive": 0
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "Positive and lively.",
+      "neutral": "Warm and easy.",
+      "tired": "Appreciation is easy to write and lifts the mood.",
+      "tense": "Positive words help calm the room."
+    },
+    "goal": {
+      "bond": "Thanking each other strengthens trust."
+    }
+  },
+  "checkInQuestion": "Who helped you recently, and what did they do?",
+  "facilitationTips": [
+    "Give an example of good kudos: name the person and say what they did.",
+    "Make sure everyone gets at least one kudo so nobody is left out.",
+    "Read the cards aloud slowly and let the receiver just say thank you."
+  ]
+}

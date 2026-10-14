@@ -1,4 +1,5 @@
 import { CreateSessionPage } from '../ui/CreateSessionPage';
+import { FormatFlowScreen } from '../ui/format/FormatFlowScreen';
 import { EndedPage } from '../ui/EndedPage';
 import { HomePage } from '../ui/HomePage';
 import { JoinPage } from '../ui/JoinPage';
@@ -15,6 +16,8 @@ import { AppContext, useApp } from './context';
 function Screen() {
   const app = useApp();
   switch (app.screen.value) {
+    case 'new':
+      return <FormatFlowScreen />;
     case 'create':
       return <CreateSessionPage />;
     case 'join':

@@ -18,6 +18,12 @@ const controller = new AppController({
   hostOfflineHintMs: config.hostOfflineHintMs,
 });
 
+// the e2e build stands in for the contributions module (Epic 4) with a small fixture
+if (import.meta.env.VITE_E2E_FAKE_CONTRIBUTIONS === 'true') {
+  const { registerFakeContributions } = await import('../e2e/fixtures/fakeContributions');
+  registerFakeContributions();
+}
+
 controller.boot();
 
 render(<App controller={controller} />, document.getElementById('app')!);

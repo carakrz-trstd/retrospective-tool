@@ -1,0 +1,86 @@
+{
+  "id": "speed-car",
+  "name": "Speed Car",
+  "description": "Picture the team as a race car: the engine pushes you forward and the parachute slows you down. A quick and playful way to find what helps and what holds back.",
+  "source": {
+    "name": "funretrospectives.com",
+    "url": "https://www.funretrospectives.com/speed-car/"
+  },
+  "columns": [
+    {
+      "id": "engine",
+      "name": "Engine",
+      "prompt": "What speeds us up and helps us go faster?"
+    },
+    {
+      "id": "parachute",
+      "name": "Parachute",
+      "prompt": "What slows us down and holds us back?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 4,
+        "reveal": 3,
+        "discuss": 9
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 7,
+        "reveal": 5,
+        "discuss": 15
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 3,
+      "neutral": 2,
+      "tired": 2,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 3,
+      "bond": 1,
+      "reflect-period": 1,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 3,
+      "extensive": 1
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "Quick and playful, matches high energy.",
+      "neutral": "Simple and light.",
+      "tired": "Only two columns and a light picture."
+    },
+    "goal": {
+      "fun": "A race-car picture makes it fun.",
+      "reflect-project": "Finds what helps or slows down the work."
+    }
+  },
+  "checkInQuestion": "How fast do you feel today: parked, city speed or full throttle?",
+  "facilitationTips": [
+    "Draw a simple car with an engine and a parachute on the board.",
+    "Keep the writing short: three minutes per column is enough.",
+    "Pick the biggest parachute and decide how to cut it loose."
+  ]
+}

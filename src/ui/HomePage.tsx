@@ -23,7 +23,7 @@ export function HomePage() {
 
       <section aria-labelledby="create-heading">
         <h2 id="create-heading">{texts.createSession}</h2>
-        <button type="button" class="primary" onClick={() => app.goCreate()}>
+        <button type="button" class="primary" onClick={() => app.goNew()}>
           {texts.createSession}
         </button>
       </section>

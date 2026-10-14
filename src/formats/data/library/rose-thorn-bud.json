@@ -1,0 +1,87 @@
+{
+  "id": "rose-thorn-bud",
+  "name": "Rose-Thorn-Bud",
+  "description": "Team members share a rose (something good), a thorn (a difficulty) and a bud (something with potential). A gentle way to get to know each other and share honestly.",
+  "columns": [
+    {
+      "id": "rose",
+      "name": "Rose",
+      "prompt": "What went well or made you happy?"
+    },
+    {
+      "id": "thorn",
+      "name": "Thorn",
+      "prompt": "What was difficult or painful?"
+    },
+    {
+      "id": "bud",
+      "name": "Bud",
+      "prompt": "What new idea or chance do you see growing?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 4,
+        "reveal": 3,
+        "discuss": 9
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 8,
+        "reveal": 5,
+        "discuss": 14
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 2,
+      "tired": 3,
+      "tense": 3
+    },
+    "goal": {
+      "fun": 1,
+      "bond": 3,
+      "reflect-period": 1,
+      "reflect-project": 1
+    },
+    "depth": {
+      "lean": 3,
+      "extensive": 1
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 2
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "Light and open, easy to start.",
+      "neutral": "Simple and friendly.",
+      "tired": "A gentle, short format.",
+      "tense": "Thorns can be shared in a safe and kind way."
+    },
+    "goal": {
+      "bond": "Sharing roses and thorns builds trust."
+    }
+  },
+  "checkInQuestion": "What is one rose from your week, something that made you smile?",
+  "facilitationTips": [
+    "Start with roses so the mood is positive before you move to thorns.",
+    "Let each person read their own notes aloud, without interruption.",
+    "Thank people for sharing thorns; do not try to fix them right away."
+  ]
+}

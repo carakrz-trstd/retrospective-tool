@@ -1,0 +1,80 @@
+{
+  "phases": [
+    {
+      "id": "checkIn",
+      "title": "Check-in",
+      "oneLine": "Arrive together and share how everybody is doing.",
+      "instruction": "Ask everybody to answer the question of the format in a sentence or two. Nobody has to explain their answer, and nobody comments on the answers of others.",
+      "defaultShare": 0.1
+    },
+    {
+      "id": "reviewActions",
+      "title": "Review of previous action items",
+      "oneLine": "Open the documentation from your last retro (for example in Confluence or Miro) and look at its action items together. This tool does not store or import them.",
+      "instruction": "Open the documentation from your last retro in the place where your team keeps it and go through its action items one by one: done, still open, or dropped. This tool does not store or import action items of earlier sessions.",
+      "defaultShare": 0.1
+    },
+    {
+      "id": "retro",
+      "title": "Retrospective",
+      "oneLine": "Write down your thoughts, reveal them together and discuss what matters most.",
+      "instruction": "The retrospective has three steps: write silently, reveal the entries, and discuss them. Move through the steps with the Next button.",
+      "defaultShare": 0.54
+    },
+    {
+      "id": "notes",
+      "title": "Discussion notes",
+      "oneLine": "Capture the key points of the discussion so they are not lost.",
+      "instruction": "Write down the most important points, decisions and open questions from the discussion. Keep each note short enough that somebody who was not there can understand it.",
+      "defaultShare": 0.06
+    },
+    {
+      "id": "actions",
+      "title": "Action items",
+      "oneLine": "Agree on a few concrete actions and give each one an owner.",
+      "instruction": "Turn the discussion into a small number of concrete action items. Every action item gets an owner who is present in this session. Fewer, clearer actions are better than a long list.",
+      "defaultShare": 0.12
+    },
+    {
+      "id": "checkOut",
+      "title": "Check-out",
+      "oneLine": "Close the session with a short survey and a last word.",
+      "instruction": "Ask everybody to fill in the short check-out survey, which takes about 2 minutes, and to say a last word if they like. Thank the team for their time.",
+      "defaultShare": 0.08
+    }
+  ],
+  "retroSteps": [
+    {
+      "id": "write",
+      "oneLine": "Write your own entries silently. Nobody else can see them yet.",
+      "instruction": "Everybody writes entries for the columns on their own device. Entries stay hidden from the others until the Facilitator reveals them, so write freely and do not talk about them yet.",
+      "defaultShare": 0.16
+    },
+    {
+      "id": "reveal",
+      "oneLine": "All entries are now visible to everybody.",
+      "instruction": "Read the entries of the others. Group similar entries and ask about anything that is unclear, but keep the discussion for the next step.",
+      "defaultShare": 0.1
+    },
+    {
+      "id": "discuss",
+      "oneLine": "Discuss the entries that matter most to the team.",
+      "instruction": "Start with the topics that most people care about and discuss them one at a time. Watch the time and move on when a topic has had its share.",
+      "defaultShare": 0.28
+    }
+  ],
+  "guide": [
+    {
+      "title": "If your browser closes",
+      "text": "Reopen the tool and choose Resume session on the start page; the session continues where it was. The Facilitator role cannot be handed to somebody else in this version, so if the Facilitator is gone for good, the session cannot be continued by another person."
+    },
+    {
+      "title": "Timers are a guide",
+      "text": "A timer never moves the session on by itself. When the time is over, a signal sounds and the timer counts the overtime; you decide whether to continue or move on."
+    },
+    {
+      "title": "Going back is fine",
+      "text": "Use Back to return to an earlier step. Entries that were revealed stay revealed, and the time of each step is kept."
+    }
+  ]
+}

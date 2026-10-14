@@ -1,0 +1,19 @@
+{
+  "goalMultiplier": 2,
+  "weakThreshold": 0.5,
+  "maxAlternatives": 2,
+  "order": [
+    "start-stop-continue",
+    "mad-sad-glad",
+    "4ls",
+    "sailboat",
+    "starfish",
+    "plus-delta",
+    "rose-thorn-bud",
+    "timeline",
+    "three-little-pigs",
+    "hot-air-balloon",
+    "kudos-cards",
+    "speed-car"
+  ]
+}

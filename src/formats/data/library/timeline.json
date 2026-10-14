@@ -1,0 +1,86 @@
+{
+  "id": "timeline",
+  "name": "Timeline",
+  "description": "The team goes through a period in three parts (early, middle, recent) and notes what happened and how it felt. Great for an overview of a longer period or project.",
+  "columns": [
+    {
+      "id": "early",
+      "name": "Early",
+      "prompt": "What happened at the start and how did it feel?"
+    },
+    {
+      "id": "middle",
+      "name": "Middle",
+      "prompt": "What happened in the middle and how did it feel?"
+    },
+    {
+      "id": "recent",
+      "name": "Recent",
+      "prompt": "What happened lately and how does it feel now?"
+    }
+  ],
+  "timeSplits": {
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 9,
+        "reveal": 5,
+        "discuss": 13
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 13,
+        "reveal": 9,
+        "discuss": 23
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 3,
+      "tired": 1,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 0,
+      "bond": 1,
+      "reflect-period": 3,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 0,
+      "extensive": 3
+    },
+    "setting": {
+      "in-room": 3,
+      "remote": 2
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "Walking through events together keeps people active.",
+      "neutral": "A clear time structure keeps the session calm."
+    },
+    "goal": {
+      "reflect-period": "Walks through the whole period step by step.",
+      "reflect-project": "Shows the course of the project."
+    }
+  },
+  "checkInQuestion": "What is the one moment from this period that you remember best?",
+  "facilitationTips": [
+    "Draw a horizontal line on a board and mark the three parts before you start.",
+    "Ask people to write one event per note and add a feeling.",
+    "Look for patterns: where did mood go up or down, and why?"
+  ]
+}

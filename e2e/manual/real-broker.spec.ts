@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { pickRecommendedFormat } from '../helpers';
 
 // Manual check (see docs/network-check.md): create and join through the REAL public PeerJS broker.
 // Run from the company network. Not part of the normal e2e run.
@@ -10,6 +11,7 @@ test('create and join through the real public broker', async ({ browser }) => {
 
   await F.goto('/');
   await F.getByRole('button', { name: 'Create session' }).first().click();
+  await pickRecommendedFormat(F);
   await F.getByLabel('Your name').fill('Fiona');
   await F.getByLabel('Your role').fill('Scrum Master');
   await F.getByRole('button', { name: 'Create session' }).last().click();

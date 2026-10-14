@@ -1,0 +1,80 @@
+{
+  "id": "plus-delta",
+  "name": "Plus/Delta",
+  "description": "The shortest format: what was good (plus) and what we would change (delta). It is perfect when time is short or the team is tired.",
+  "columns": [
+    {
+      "id": "plus",
+      "name": "Plus",
+      "prompt": "What went well and should we keep?"
+    },
+    {
+      "id": "delta",
+      "name": "Delta",
+      "prompt": "What would you change next time?"
+    }
+  ],
+  "timeSplits": {
+    "30": {
+      "checkIn": 3,
+      "reviewActions": 3,
+      "retro": {
+        "write": 4,
+        "reveal": 3,
+        "discuss": 9
+      },
+      "notes": 2,
+      "actions": 4,
+      "checkOut": 2
+    },
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 7,
+        "reveal": 5,
+        "discuss": 15
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 3,
+      "tired": 3,
+      "tense": 2
+    },
+    "goal": {
+      "fun": 0,
+      "bond": 1,
+      "reflect-period": 2,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 3,
+      "extensive": 0
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "tired": "Only two columns, so it takes little energy.",
+      "neutral": "Quick and easy to run."
+    },
+    "goal": {
+      "reflect-period": "A quick look back at the period."
+    }
+  },
+  "checkInQuestion": "What is one small thing that made your week better?",
+  "facilitationTips": [
+    "Keep the pace brisk: two minutes of silent writing per column is enough.",
+    "Treat every Delta as a chance to improve, not as a complaint.",
+    "Pick just one or two Deltas to turn into actions."
+  ]
+}

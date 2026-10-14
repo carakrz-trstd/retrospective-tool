@@ -1,0 +1,95 @@
+{
+  "id": "hot-air-balloon",
+  "name": "Hot Air Balloon",
+  "description": "The team pictures its project as a balloon: hot air lifts it, sandbags weigh it down, storm clouds are risks and clear skies are opportunities. A fun view of a project.",
+  "source": {
+    "name": "funretrospectives.com",
+    "url": "https://www.funretrospectives.com/hot-air-balloon/"
+  },
+  "columns": [
+    {
+      "id": "hot-air",
+      "name": "Hot air",
+      "prompt": "What lifts us up and makes us go faster?"
+    },
+    {
+      "id": "sandbags",
+      "name": "Sandbags",
+      "prompt": "What weighs us down or slows us?"
+    },
+    {
+      "id": "storm-clouds",
+      "name": "Storm clouds",
+      "prompt": "What risks or threats do you see ahead?"
+    },
+    {
+      "id": "clear-skies",
+      "name": "Clear skies",
+      "prompt": "What good chances lie ahead?"
+    }
+  ],
+  "timeSplits": {
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 9,
+        "reveal": 5,
+        "discuss": 13
+      },
+      "notes": 3,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 11,
+        "reveal": 8,
+        "discuss": 26
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 3,
+      "neutral": 2,
+      "tired": 1,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 3,
+      "bond": 1,
+      "reflect-period": 1,
+      "reflect-project": 3
+    },
+    "depth": {
+      "lean": 1,
+      "extensive": 3
+    },
+    "setting": {
+      "in-room": 3,
+      "remote": 1
+    }
+  },
+  "reasons": {
+    "mood": {
+      "energized": "A lively picture gives energy.",
+      "neutral": "Easy to follow."
+    },
+    "goal": {
+      "fun": "Imaginative and light.",
+      "reflect-project": "Covers helpers, blockers, risks and opportunities."
+    }
+  },
+  "checkInQuestion": "If you could travel anywhere in a balloon today, where would it be?",
+  "facilitationTips": [
+    "Draw a big balloon with a basket and clouds to set the scene.",
+    "Ask people to write one idea per note.",
+    "Pick the most important sandbag and storm cloud to turn into actions."
+  ]
+}

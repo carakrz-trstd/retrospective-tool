@@ -1,0 +1,99 @@
+{
+  "id": "starfish",
+  "name": "Starfish",
+  "description": "An extensive format with five columns that shows how much to do more or less of, instead of just yes or no. Good when the team wants a detailed look.",
+  "source": {
+    "name": "funretrospectives.com",
+    "url": "https://www.funretrospectives.com/starfish/"
+  },
+  "columns": [
+    {
+      "id": "keep-doing",
+      "name": "Keep doing",
+      "prompt": "What works well and should stay exactly as it is?"
+    },
+    {
+      "id": "less-of",
+      "name": "Less of",
+      "prompt": "What do we do too much of and should reduce?"
+    },
+    {
+      "id": "more-of",
+      "name": "More of",
+      "prompt": "What helps us and should we do more often?"
+    },
+    {
+      "id": "start-doing",
+      "name": "Start doing",
+      "prompt": "What new thing should we try?"
+    },
+    {
+      "id": "stop-doing",
+      "name": "Stop doing",
+      "prompt": "What should we drop completely?"
+    }
+  ],
+  "timeSplits": {
+    "50": {
+      "checkIn": 5,
+      "reviewActions": 5,
+      "retro": {
+        "write": 9,
+        "reveal": 4,
+        "discuss": 15
+      },
+      "notes": 2,
+      "actions": 6,
+      "checkOut": 4
+    },
+    "80": {
+      "checkIn": 8,
+      "reviewActions": 7,
+      "retro": {
+        "write": 11,
+        "reveal": 8,
+        "discuss": 26
+      },
+      "notes": 5,
+      "actions": 9,
+      "checkOut": 6
+    }
+  },
+  "fit": {
+    "mood": {
+      "energized": 2,
+      "neutral": 3,
+      "tired": 0,
+      "tense": 1
+    },
+    "goal": {
+      "fun": 0,
+      "bond": 1,
+      "reflect-period": 2,
+      "reflect-project": 2
+    },
+    "depth": {
+      "lean": 0,
+      "extensive": 3
+    },
+    "setting": {
+      "in-room": 2,
+      "remote": 3
+    }
+  },
+  "reasons": {
+    "mood": {
+      "neutral": "Enough energy is needed for five columns."
+    },
+    "goal": {
+      "reflect-period": "A detailed look at the whole period.",
+      "reflect-project": "Gives precise guidance for the project."
+    }
+  },
+  "checkInQuestion": "What is one thing you would like to do more of this week?",
+  "facilitationTips": [
+    "Show all five columns and explain the difference between Less of and Stop doing.",
+    "Ask people to fill every column, even with a small note.",
+    "Vote on the three notes to discuss so the extra columns do not eat the time."
+  ]
+}
