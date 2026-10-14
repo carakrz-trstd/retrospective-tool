@@ -1,0 +1,37 @@
+{
+  "name": "retrospective-tool",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Internal retrospective tool for teams: run a retro without the coach.",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "build:e2e": "tsc --noEmit && vite build --mode e2e --outDir dist-e2e",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "start:e2e-signaling": "node e2e/peer-server.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "tsc --noEmit && prettier --check ."
+  },
+  "dependencies": {
+    "@preact/signals": "^2.11.3",
+    "peerjs": "^1.5.5",
+    "preact": "^11.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/preact": "^3.2.4",
+    "happy-dom": "^21.0.1",
+    "peer": "^1.0.2",
+    "prettier": "^3.9.10",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
+  }
+}

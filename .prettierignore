@@ -1,0 +1,6 @@
+node_modules
+dist
+dist-e2e
+specs
+package-lock.json
+.claude
