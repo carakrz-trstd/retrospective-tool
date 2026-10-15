@@ -29,5 +29,12 @@ export default defineConfig({
       timeout: 180_000,
       reuseExistingServer: false,
     },
+    {
+      // the same app without the Epic 3 test fixture: the real contributions module (Epic 4 tests)
+      command: 'npm run build:e2e-real && npx vite preview --outDir dist-e2e-real --port 4174 --strictPort',
+      url: 'http://localhost:4174',
+      timeout: 180_000,
+      reuseExistingServer: false,
+    },
   ],
 });

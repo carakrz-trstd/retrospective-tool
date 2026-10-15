@@ -1,6 +1,6 @@
 import { CreateSessionPage } from '../ui/CreateSessionPage';
 import { FormatFlowScreen } from '../ui/format/FormatFlowScreen';
-import { EndedPage } from '../ui/EndedPage';
+import { DocumentationPage } from '../ui/doc/DocumentationPage';
 import { HomePage } from '../ui/HomePage';
 import { JoinPage } from '../ui/JoinPage';
 import { LobbyPage } from '../ui/LobbyPage';
@@ -27,7 +27,7 @@ function Screen() {
     case 'session':
       return <SessionShell />;
     case 'ended':
-      return <EndedPage />;
+      return <DocumentationPage />;
     case 'removed':
       return <RemovedPage />;
     default:

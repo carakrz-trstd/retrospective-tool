@@ -12,6 +12,7 @@
 
 import { config } from '../config';
 import type { Intent } from '../core/protocol';
+import type { SurveyAnswer } from '../contrib/types';
 import type { HostData, SessionState } from '../core/types';
 
 export interface StorageLike {
@@ -35,6 +36,13 @@ export interface ParticipantRecord {
   outbox: Intent[];
   /** The participant used "Leave session": do not reconnect by themselves. */
   leftLocally: boolean;
+  /** This device's survey answer key and own answer (the host never learns who gave which answer). */
+  survey?: LocalSurvey;
+}
+
+export interface LocalSurvey {
+  answerKey: string;
+  answer?: SurveyAnswer;
 }
 
 export interface Identity {
@@ -57,6 +65,7 @@ interface Envelope<T> {
 const HOST_PREFIX = 'retro.host.';
 const PARTICIPANT_PREFIX = 'retro.participant.';
 const FINAL_PREFIX = 'retro.final.';
+const SURVEY_PREFIX = 'retro.survey.';
 const IDENTITY_KEY = 'retro.identity';
 const INDEX_KEY = 'retro.index';
 const ACTIVE_KEY = 'retro.activeSession';
@@ -124,6 +133,42 @@ export class Store {
     if (this.getActiveSession() === sessionId) this.setActiveSession(null);
   }
 
+  // ---- final documentation (Epic 5) ----------------------------------------------------------
+
+  /** Saves the final documentation record; returns false when the browser would not store it. */
+  saveFinalRecord<T>(sessionId: string, record: T): boolean {
+    this.writeEnvelope(FINAL_PREFIX + sessionId, record);
+    if (this.readRaw(FINAL_PREFIX + sessionId) === null) return false;
+    this.touchIndex(sessionId, this.readRaw(HOST_PREFIX + sessionId) !== null ? 'host' : 'participant');
+    return true;
+  }
+
+  loadFinalRecord<T>(sessionId: string): T | null {
+    return this.readEnvelope<T>(FINAL_PREFIX + sessionId);
+  }
+
+  removeFinalRecord(sessionId: string): void {
+    this.removeRaw(FINAL_PREFIX + sessionId);
+  }
+
+  // ---- survey key of the Facilitator's own device ---------------------------------------------
+
+  /** The Facilitator answers the survey too: the key is kept apart from the host record. */
+  saveHostSurvey(sessionId: string, survey: LocalSurvey): void {
+    this.writeRaw(SURVEY_PREFIX + sessionId, JSON.stringify(survey));
+  }
+
+  loadHostSurvey(sessionId: string): LocalSurvey | null {
+    const raw = this.readRaw(SURVEY_PREFIX + sessionId);
+    if (!raw) return null;
+    try {
+      const v = JSON.parse(raw) as LocalSurvey;
+      return typeof v.answerKey === 'string' ? v : null;
+    } catch {
+      return null;
+    }
+  }
+
   // ---- identity (pre-fill) ----------------------------------------------------------------
 
   saveIdentity(identity: Identity): void {
@@ -159,6 +204,7 @@ export class Store {
     this.removeRaw(HOST_PREFIX + sessionId);
     this.removeRaw(PARTICIPANT_PREFIX + sessionId);
     this.removeRaw(FINAL_PREFIX + sessionId);
+    this.removeRaw(SURVEY_PREFIX + sessionId);
     this.writeIndex(this.readIndex().filter((e) => e.sessionId !== sessionId));
     if (this.getActiveSession() === sessionId) this.setActiveSession(null);
   }

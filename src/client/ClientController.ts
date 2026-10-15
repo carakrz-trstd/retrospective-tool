@@ -14,7 +14,14 @@ import {
   type Intent,
 } from '../core/protocol';
 import type { SessionState } from '../core/types';
-import { store as defaultStore, type ParticipantRecord, type Store } from '../storage/storage';
+import type { SurveyAnswer } from '../contrib/types';
+import { createUuid } from '../core/ids';
+import {
+  store as defaultStore,
+  type LocalSurvey,
+  type ParticipantRecord,
+  type Store,
+} from '../storage/storage';
 import { isNotFound, type Connection, type Transport } from '../transport/Transport';
 
 const DEFAULT_BACKOFF_MS = [1_000, 2_000, 4_000, 8_000, 15_000];
@@ -41,6 +48,8 @@ export interface ClientSnapshot {
   error: ClientErrorReason | null;
   /** Intents the host has not acknowledged yet. */
   outbox: Intent[];
+  /** This device's own survey answer and its random key (kept in the participant record). */
+  surveyLocal: LocalSurvey | null;
   /** Intents the host refused, with the reason (the UI can tell the person). */
   rejectedOps: { opId: string; kind: string; reason: string }[];
 }
@@ -77,6 +86,7 @@ export class ClientController {
   private sessionId: string | null = null;
   private lastSeq = 0;
   private outbox: Intent[] = [];
+  private surveyLocal: LocalSurvey | null = null;
   private rejectedOps: ClientSnapshot['rejectedOps'] = [];
   private leftLocally = false;
   private error: ClientErrorReason | null = null;
@@ -136,6 +146,7 @@ export class ClientController {
     c.state = record.lastState;
     c.lastSeq = record.lastSeq;
     c.outbox = record.outbox;
+    c.surveyLocal = record.survey ?? null;
     c.leftLocally = false;
     c.status = 'reconnecting';
     c.persist();
@@ -154,6 +165,7 @@ export class ClientController {
       longOffline: this.longOffline,
       error: this.error,
       outbox: this.outbox,
+      surveyLocal: this.surveyLocal,
       rejectedOps: this.rejectedOps,
     };
   }
@@ -182,6 +194,17 @@ export class ClientController {
     this.emit();
     if (this.conn && this.status === 'online') this.sendMessage({ type: 'intent', ...intent });
     return opId;
+  }
+
+  /**
+   * Answers (or changes the answer of) the exit survey. The random answer key is created once per
+   * session on this device; the host stores the answer only under that key.
+   */
+  submitSurvey(answer: SurveyAnswer): void {
+    const answerKey = this.surveyLocal?.answerKey ?? createUuid();
+    this.surveyLocal = { answerKey, answer };
+    this.persist();
+    this.sendIntent('survey.submit', { answerKey, answer });
   }
 
   /** "Leave session": close on this device only; the record stays so the person can rejoin later. */
@@ -463,6 +486,7 @@ export class ClientController {
       lastSeq: this.lastSeq,
       outbox: this.outbox,
       leftLocally: this.leftLocally,
+      ...(this.surveyLocal ? { survey: this.surveyLocal } : {}),
     };
     this.store.saveParticipantRecord(this.sessionId, record);
   }

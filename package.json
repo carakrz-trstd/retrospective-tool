@@ -16,7 +16,8 @@
     "start:e2e-signaling": "node e2e/peer-server.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint": "tsc --noEmit && prettier --check ."
+    "lint": "tsc --noEmit && prettier --check .",
+    "build:e2e-real": "tsc --noEmit && vite build --mode e2e-real --outDir dist-e2e-real"
   },
   "dependencies": {
     "@preact/signals": "^2.11.3",

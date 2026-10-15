@@ -5,3 +5,4 @@ test-results
 playwright-report
 .vite
 *.log
+dist-e2e-real

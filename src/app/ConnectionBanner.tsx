@@ -1,4 +1,5 @@
 import { texts } from '../texts';
+import { getOfflineHintActions } from './bannerActions';
 import { useApp } from './context';
 
 /** Always shows the connection state (NFR-6): connecting, reconnecting, Facilitator offline. */
@@ -39,6 +40,9 @@ export function ConnectionBanner() {
           <button type="button" onClick={() => app.leave()}>
             {texts.leaveSession}
           </button>
+          {getOfflineHintActions().map((Action, i) => (
+            <Action key={i} />
+          ))}
         </div>
       )}
       {role === 'host' && c.readOnly && sessionId && (

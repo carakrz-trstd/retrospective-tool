@@ -191,6 +191,8 @@ test('J8 End: the Facilitator ends the session for everyone (AC-14, AC-15)', asy
   await expect(F.getByRole('heading', { name: 'The session has ended' })).toBeVisible();
   expect((await localStorageKeys(A)).some((k) => k.startsWith('retro.participant.'))).toBe(true); // kept until the person leaves
   await A.getByRole('button', { name: 'Done: remove this session from this device' }).click();
+  // Epic 5: leaving without an export asks for confirmation first
+  await A.getByRole('dialog').getByRole('button', { name: 'Leave without exporting' }).click();
   await expect(A.getByRole('button', { name: 'Create session' })).toBeVisible();
   expect((await localStorageKeys(A)).filter((k) => k.startsWith('retro.participant.'))).toEqual([]);
   // a new person cannot join an ended session

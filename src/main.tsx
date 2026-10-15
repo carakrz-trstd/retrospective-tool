@@ -3,8 +3,11 @@ import { App } from './app/App';
 import { AppController } from './app/AppController';
 import { createBrowserRouter } from './app/router';
 import { config } from './config';
+import { registerContrib } from './contrib/register';
 import { store } from './storage/storage';
 import { TabGuard } from './tabs/TabGuard';
+import { registerContribViews } from './ui/contrib/registerViews';
+import { registerDocViews } from './ui/doc/registerViews';
 import { PeerTransport } from './transport/PeerTransport';
 import './styles.css';
 
@@ -18,12 +21,17 @@ const controller = new AppController({
   hostOfflineHintMs: config.hostOfflineHintMs,
 });
 
-// the e2e build stands in for the contributions module (Epic 4) with a small fixture
+// The Epic 3 e2e build stands in for the contributions module with a small fixture; every other
+// build uses the real one.
 if (import.meta.env.VITE_E2E_FAKE_CONTRIBUTIONS === 'true') {
   const { registerFakeContributions } = await import('../e2e/fixtures/fakeContributions');
   registerFakeContributions();
+} else {
+  registerContrib();
+  registerContribViews();
 }
 
+registerDocViews();
 controller.boot();
 
 render(<App controller={controller} />, document.getElementById('app')!);

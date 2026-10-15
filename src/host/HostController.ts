@@ -7,7 +7,7 @@ import { diffViews } from '../core/diff';
 import { createJoinCode, createSessionId, createUuid, normalizeJoinCode } from '../core/ids';
 import { resolverPeerId, sessionPeerId } from '../core/peerIds';
 import { PROTOCOL_VERSION, type ClientMessage, type HostMessage, isClientMessage } from '../core/protocol';
-import { getIntentHandler, isAnonymousIntent } from '../core/registry';
+import { collectEndPayload, getIntentHandler, isAnonymousIntent } from '../core/registry';
 import * as reducer from '../core/reducer';
 import type { CreateSessionInput } from '../core/reducer';
 import type { Effect, HostData, ReduceResult, SessionState } from '../core/types';
@@ -228,6 +228,12 @@ export class HostController {
     cs.conn.send({ v: PROTOCOL_VERSION, hostTime: this.now(), ...msg });
   }
 
+  /** The `ended` message with what later epics add to it (the final documentation); also sent again on a rejoin. */
+  private sendEnded(cs: ConnState): void {
+    const payload = collectEndPayload(this._data.state);
+    this.send(cs, { type: 'ended', ...(payload ? { payload } : {}) });
+  }
+
   private sendSnapshot(cs: ConnState, token?: string): void {
     const pid = cs.participantId!;
     const view = viewFor(this._data.state, pid);
@@ -239,7 +245,7 @@ export class HostController {
       seq: cs.seq,
       state: view,
     });
-    if (this._data.state.status === 'ended') this.send(cs, { type: 'ended' });
+    if (this._data.state.status === 'ended') this.sendEnded(cs);
   }
 
   /** Sends each connected participant the difference to what they saw before. */
@@ -286,7 +292,7 @@ export class HostController {
     const wasEnded = this._data.state.status !== 'ended' && res.data.state.status === 'ended';
     this.commit(res.data, res.effects);
     if (wasEnded) {
-      for (const cs of this.bound.values()) this.send(cs, { type: 'ended' });
+      for (const cs of this.bound.values()) this.sendEnded(cs);
     }
     return { ok: true };
   }

@@ -408,3 +408,119 @@ select {
   border-radius: 0.5rem;
   margin: 0;
 }
+
+/* participant contributions (Epic 4) */
+.retro-board {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 720px) {
+  .retro-board {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+}
+.retro-column,
+.contrib-checkin,
+.contrib-notes,
+.contrib-actions,
+.contrib-survey {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+.composer textarea,
+.action-form textarea,
+.entry-edit textarea,
+.contrib-survey textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+.composer-row {
+  justify-content: space-between;
+  align-items: center;
+}
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.entry-card {
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+.entry-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.entry-author {
+  margin: 0.25rem 0;
+}
+.check-in-question {
+  font-weight: 600;
+  margin: 0;
+}
+.rating-group .options {
+  display: flex;
+  gap: 0.5rem;
+}
+.survey-results ul {
+  padding-left: 1.25rem;
+}
+
+/* documentation and export (Epic 5) */
+.save-warning {
+  border: 2px solid var(--error);
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+.doc-preview {
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  overflow-x: auto;
+}
+.doc-preview table {
+  border-collapse: collapse;
+}
+.doc-preview th,
+.doc-preview td {
+  border: 1px solid var(--line);
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+}
+.export-buttons {
+  display: grid;
+  gap: 0.75rem;
+}
+@media (min-width: 720px) {
+  .export-buttons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.export-item {
+  display: grid;
+  gap: 0.25rem;
+}
+.export-message {
+  margin: 0;
+  min-height: 1.25em;
+}
+.export-message.error {
+  color: var(--error);
+}
+.export-status {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}

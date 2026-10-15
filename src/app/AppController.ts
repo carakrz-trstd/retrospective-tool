@@ -7,6 +7,14 @@ import {
   type ClientSnapshot,
   type ClientStatus,
 } from '../client/ClientController';
+import { overlayState } from '../contrib/overlay';
+import { collectEndGuardMessages } from '../core/registry';
+import { buildDocumentModel } from '../doc/build';
+import { parseFinalPayload, registerDocEnd } from '../doc/endIntegration';
+import { loadFinal, markExported, saveFinal } from '../doc/finalStore';
+import { noExports, type DocumentModel, type ExportKind, type FinalRecord } from '../doc/model';
+import type { SurveyAnswer } from '../contrib/types';
+import { createUuid } from '../core/ids';
 import type { SessionState } from '../core/types';
 import { registerFlow } from '../flow';
 import { HostClock } from '../flow/clock';
@@ -18,7 +26,7 @@ import type { FlowState, StopId } from '../flow/types';
 import type { ChosenFormat } from '../formats/types';
 import { FormatFlow } from '../ui/format/flow';
 import { HostController, type ListeningStatus } from '../host/HostController';
-import type { Identity, Store } from '../storage/storage';
+import type { Identity, LocalSurvey, Store } from '../storage/storage';
 import type { TabGuard } from '../tabs/TabGuard';
 import type { Transport } from '../transport/Transport';
 import { texts } from '../texts';
@@ -102,11 +110,20 @@ export class AppController {
   readonly sound: Pick<SoundPlayer, 'unlock' | 'beep'>;
   /** This device's own sound mute (stored in retro.prefs). */
   readonly localMuted = ref(getLocalMuted());
+  /** This device's own survey answer and its random answer key (never stored with a participant ID). */
+  readonly mySurvey = ref<LocalSurvey | null>(null);
+  /** How many refused changes the person has already been told about. */
+  readonly rejectedSeen = ref(0);
+  /** The final documentation kept on this device, with the exports done so far. */
+  readonly docRecord = ref<FinalRecord | null>(null);
+  /** False when the browser would not store the documentation (a reload would lose it). */
+  readonly docPersisted = ref(true);
   /** The stop at which the Facilitator is told that the entries became visible (AD-16). */
   readonly revealNoteStop = ref<StopId | null>(null);
 
   constructor(private readonly services: AppServices) {
     registerFlow();
+    registerDocEnd();
     this.sound = services.sound ?? new SoundPlayer();
     this.flow = new FormatFlow({
       onChosen: (chosen) => this.onFormatChosen(chosen),
@@ -335,6 +352,7 @@ export class AppController {
     this.myParticipantId.set(host.facilitatorId);
     this.services.store.setActiveSession(this.sessionId);
     this.services.router.replace('#/session');
+    this.mySurvey.set(this.services.store.loadHostSurvey(this.sessionId));
     const sessionId = this.sessionId;
     this.unsubs.push(
       host.onChange(() => this.syncHost()),
@@ -360,11 +378,17 @@ export class AppController {
     if (!this.host) return;
     const view = this.host.view();
     this.state.set(view);
+    if (view.status === 'ended') this.ensureHostFinal();
     this.screen.set(screenFor(view.status));
   }
 
   startSession(): void {
     this.host?.startSession();
+  }
+
+  /** Warnings before the session ends. The guards look at the host's full state: the Facilitator's own view hides entries of others. */
+  endGuardMessages(): string[] {
+    return this.host ? collectEndGuardMessages(this.host.data.state) : [];
   }
 
   endSession(): void {
@@ -412,6 +436,25 @@ export class AppController {
   sendIntent(kind: string, payload: unknown): void {
     if (this.host) this.host.applyLocalIntent(kind, payload);
     else this.client?.sendIntent(kind, payload);
+  }
+
+  /** Answers or changes the answer of the exit survey from this device. */
+  submitSurvey(answer: SurveyAnswer): void {
+    if (this.host) {
+      const sessionId = this.host.data.state.sessionId;
+      const answerKey = this.mySurvey.value?.answerKey ?? createUuid();
+      const local = { answerKey, answer };
+      this.services.store.saveHostSurvey(sessionId, local);
+      this.mySurvey.set(local);
+      this.host.applyLocalIntent('survey.submit', { answerKey, answer });
+    } else {
+      this.client?.submitSurvey(answer);
+    }
+  }
+
+  /** The person has seen the message about refused changes. */
+  dismissRejected(): void {
+    this.rejectedSeen.set(this.rejectedOps.value.length);
   }
 
   setLocalMuted(muted: boolean): void {
@@ -475,13 +518,27 @@ export class AppController {
     const snap = client.snapshot;
     this.sessionId = sessionId ?? snap.state?.sessionId ?? null;
     this.services.router.replace('#/session');
-    this.unsubs.push(client.onChange((s) => this.syncClient(s)));
+    const stored = this.sessionId ? loadFinal(this.sessionId, this.services.store) : null;
+    if (stored) this.docRecord.set(stored);
+    this.unsubs.push(
+      client.onChange((s) => this.syncClient(s)),
+      client.onEnded((payload) => this.onEnded(payload)),
+    );
     this.syncClient(snap);
   }
 
   private syncClient(snap: ClientSnapshot): void {
     this.myParticipantId.set(snap.participantId);
-    this.state.set(snap.state);
+    // own writes the host has not confirmed yet are shown on top of the last received state
+    this.state.set(
+      overlayState(
+        snap.state,
+        snap.outbox,
+        { participantId: snap.participantId, isFacilitator: false },
+        Date.now(),
+      ),
+    );
+    this.mySurvey.set(snap.surveyLocal);
     this.rejectedOps.set(snap.rejectedOps);
     this.connection.set({
       status: snap.status,
@@ -492,6 +549,7 @@ export class AppController {
     if (snap.status === 'removed') this.screen.set('removed');
     else if (snap.status === 'ended' || snap.state?.status === 'ended') this.screen.set('ended');
     else if (snap.status === 'left') this.goHome();
+    else if (this.docRecord.value) this.screen.set('ended');
     else this.screen.set(snap.state ? screenFor(snap.state.status) : 'lobby');
   }
 
@@ -504,13 +562,74 @@ export class AppController {
 
   /** Called when a person is done with an ended session (Epic 5: after leaving the documentation). */
   finishEnded(): void {
-    const sessionId = this.sessionId;
+    const sessionId = this.sessionId ?? this.state.value?.sessionId ?? null;
     this.detach();
     if (sessionId) {
       this.services.store.removeSession(sessionId);
       this.services.tabGuard.release(sessionId);
     }
     this.goHome();
+  }
+
+  // ---- documentation (Epic 5) ----------------------------------------------------------------
+
+  /** Shows the documentation page for a record (kept on this device). */
+  openDocumentation(record: FinalRecord, persisted = true): void {
+    this.docRecord.set(record);
+    this.docPersisted.set(persisted);
+    this.screen.set('ended');
+  }
+
+  /** Stores the final model (the export marks of an earlier copy stay) and shows it. */
+  private receiveFinal(model: DocumentModel): void {
+    const sessionId = this.sessionId ?? this.state.value?.sessionId;
+    if (!sessionId) return;
+    const { store } = this.services;
+    const persisted = saveFinal(sessionId, model, store);
+    const record = loadFinal(sessionId, store) ?? {
+      model,
+      exports: this.docRecord.value?.exports ?? noExports(),
+    };
+    this.openDocumentation(record, persisted);
+  }
+
+  /** The host said the session ended: keep the documentation it sent. */
+  private onEnded(payload: unknown): void {
+    const model = parseFinalPayload(payload);
+    const state = this.state.value;
+    if (model) this.receiveFinal(model);
+    else if (state) this.receiveFinal(buildDocumentModel(state, { incomplete: true }));
+  }
+
+  /** The Facilitator's own device builds the documentation from its full state when the session has ended. */
+  private ensureHostFinal(): void {
+    if (!this.host || this.docRecord.value) return;
+    const state = this.host.data.state;
+    const existing = loadFinal(state.sessionId, this.services.store);
+    if (existing) this.openDocumentation(existing);
+    else this.receiveFinal(buildDocumentModel(state, { incomplete: false }));
+  }
+
+  /** The Facilitator stayed away: build the documentation from what this device holds. */
+  openIncompleteDocumentation(): void {
+    const state = this.state.value;
+    if (state) this.receiveFinal(buildDocumentModel(state, { incomplete: true }));
+  }
+
+  markExport(kind: ExportKind): void {
+    const record = this.docRecord.value;
+    const sessionId = this.sessionId ?? this.state.value?.sessionId;
+    if (!record || !sessionId) return;
+    const next = markExported(sessionId, kind, this.services.store) ?? {
+      ...record,
+      exports: { ...record.exports, [kind]: true },
+    };
+    this.docRecord.set(next);
+  }
+
+  /** The person leaves the documentation: everything this device keeps for the session is removed. */
+  leaveDocumentation(): void {
+    this.finishEnded();
   }
 
   /** The page is going away: close the connections now (the session is already saved). */
@@ -526,6 +645,8 @@ export class AppController {
     this.host = null;
     this.client = null;
     this.state.set(null);
+    this.docRecord.set(null);
+    this.docPersisted.set(true);
     this.role.set(null);
     this.myParticipantId.set(null);
     this.connection.set(idleConnection);

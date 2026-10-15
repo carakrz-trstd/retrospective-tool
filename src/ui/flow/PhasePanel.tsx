@@ -26,11 +26,6 @@ export function PhasePanel(props: { stop: StopId; isFacilitator: boolean }) {
           {!step && <p>{phase.instruction}</p>}
           {step && <p>{phase.instruction}</p>}
           {step && <p>{step.instruction}</p>}
-          {stop === 'checkIn' && format?.checkInQuestion && (
-            <p>
-              <strong>{texts.flow.checkInQuestion}:</strong> {format.checkInQuestion}
-            </p>
-          )}
           {isRetro(stop) && format && format.facilitationTips.length > 0 && (
             <div>
               <h4>{texts.flow.tips}</h4>

@@ -1,6 +1,5 @@
 import { useState } from 'preact/hooks';
 import { useApp } from '../app/context';
-import { collectEndGuardMessages } from '../core/registry';
 import { texts } from '../texts';
 import { ConfirmDialog } from './ConfirmDialog';
 
@@ -10,7 +9,7 @@ export function EndSessionControl() {
   const [open, setOpen] = useState(false);
   const state = app.state.value;
   if (!state || app.role.value !== 'host') return null;
-  const messages = open ? collectEndGuardMessages(state) : [];
+  const messages = open ? app.endGuardMessages() : [];
 
   return (
     <>

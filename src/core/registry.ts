@@ -16,6 +16,7 @@ export type IntentResult = { ok: true; state: SessionState } | { ok: false; reas
 export type IntentHandler = (ctx: IntentContext) => IntentResult;
 export type ViewFilter = (state: SessionState, participantId: string) => SessionState;
 export type EndGuard = (state: SessionState) => { message?: string };
+export type EndPayloadFn = (state: SessionState) => Record<string, unknown> | undefined;
 export type RemovalHook = (state: SessionState, participantId: string) => SessionState;
 
 interface IntentEntry {
@@ -27,6 +28,7 @@ const intents = new Map<string, IntentEntry>();
 let viewFilters: ViewFilter[] = [];
 let endGuards: EndGuard[] = [];
 let removalHooks: RemovalHook[] = [];
+let endPayloads: EndPayloadFn[] = [];
 
 export function registerIntentHandler(
   type: string,
@@ -54,7 +56,22 @@ export function applyViewFilters(state: SessionState, participantId: string): Se
 }
 
 export function registerEndGuard(guard: EndGuard): void {
-  endGuards.push(guard);
+  if (!endGuards.includes(guard)) endGuards.push(guard);
+}
+
+/** Data that the host adds to the `ended` message (for example the final documentation). */
+export function registerEndPayload(fn: EndPayloadFn): void {
+  if (!endPayloads.includes(fn)) endPayloads.push(fn);
+}
+
+/** The merged payload of all registered functions, or undefined when there is none. */
+export function collectEndPayload(state: SessionState): Record<string, unknown> | undefined {
+  let merged: Record<string, unknown> | undefined;
+  for (const fn of endPayloads) {
+    const part = fn(state);
+    if (part) merged = { ...merged, ...part };
+  }
+  return merged;
 }
 
 /** Messages of all end guards that have something to say. */
@@ -81,4 +98,5 @@ export function resetRegistries(): void {
   viewFilters = [];
   endGuards = [];
   removalHooks = [];
+  endPayloads = [];
 }

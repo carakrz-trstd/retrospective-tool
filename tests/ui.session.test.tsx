@@ -254,6 +254,8 @@ describe('cleanup', () => {
     t.app.endSession();
     expect(t.device.store.loadHostRecord(sessionId)).not.toBeNull(); // kept until the person leaves
     fireEvent.click(await q.findByRole('button', { name: 'Done: remove this session from this device' }));
+    // Epic 5: leaving without an export asks for confirmation first
+    fireEvent.click(within(q.getByRole('dialog')).getByRole('button', { name: 'Leave without exporting' }));
     await q.findByRole('button', { name: 'Create session' });
     expect(t.device.store.loadHostRecord(sessionId)).toBeNull();
     expect(t.device.store.listIndex()).toEqual([]);
