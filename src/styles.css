@@ -24,7 +24,8 @@
   --surface-high: #ffffff;
   --on-surface: #232529;
   --on-surface-variant: #4a4f55;
-  --outline: #8b929a;
+  --outline: #6b727a;
+  --accent-strong: #b97800;
   --outline-variant: #d9dee3;
   --error: #ba1a1a;
   --error-container: #ffdad6;
@@ -101,6 +102,7 @@
     --on-surface: #eaedef;
     --on-surface-variant: #bac0c7;
     --outline: #6a7079;
+    --accent-strong: #ffd200;
     --outline-variant: #33363b;
     --error: #ffb4ab;
     --error-container: #93000a;
@@ -303,8 +305,9 @@ button.primary:disabled {
   border-color: transparent;
 }
 
+/* a solid ring that stays visible on every surface (3:1 or more) */
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--primary) 70%, transparent);
+  outline: 3px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -446,6 +449,10 @@ input[type='checkbox'] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
@@ -720,6 +727,7 @@ legend {
   gap: 0.5rem;
 }
 .entry-card {
+  animation: entry-in var(--motion-medium) var(--easing);
   background: var(--surface-low);
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-1);
@@ -838,7 +846,7 @@ legend {
 }
 
 .ring-value.low {
-  stroke: var(--accent);
+  stroke: var(--accent-strong);
 }
 
 .ring-value.over {
@@ -1267,4 +1275,32 @@ legend {
 
 .timer-time {
   font-size: 1.5rem;
+}
+
+/* ---- polish: motion for new items and empty states ------------------------------------------ */
+
+@keyframes entry-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+}
+
+.entry-list:empty {
+  display: none;
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-2);
+  color: var(--on-surface-variant);
+  font-size: 0.9375rem;
+}
+
+.empty-state .icon {
+  flex: none;
+  opacity: 0.7;
 }

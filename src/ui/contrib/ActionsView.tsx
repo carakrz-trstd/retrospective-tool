@@ -4,6 +4,7 @@ import { getContribView, type ActionItem } from '../../contrib/types';
 import { createUuid } from '../../core/ids';
 import type { PhaseViewProps } from '../../flow/registries';
 import { texts } from '../../texts';
+import { EmptyState } from '../EmptyState';
 import { ActionForm } from './ActionForm';
 import { byCreated } from './names';
 import { RejectedNotice } from './RejectedNotice';
@@ -91,6 +92,7 @@ export function ActionsView(props: PhaseViewProps) {
             <ActionCard key={item.id} item={item} props={props} />
           ))}
       </ul>
+      {Object.keys(view.actions).length === 0 && <EmptyState icon="task" text={texts.contrib.noActions} />}
     </section>
   );
 }

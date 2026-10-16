@@ -6,6 +6,7 @@ import { createUuid } from '../../core/ids';
 import type { PhaseViewProps } from '../../flow/registries';
 import { texts } from '../../texts';
 import { Avatar } from '../Avatar';
+import { EmptyState } from '../EmptyState';
 import { CharCounter } from './CharCounter';
 import { EntryComposer } from './EntryComposer';
 import { byCreated, nameOf } from './names';
@@ -110,6 +111,7 @@ export function NotesView(props: PhaseViewProps) {
             />
           ))}
       </ul>
+      {Object.keys(view.notes).length === 0 && <EmptyState icon="note" text={texts.contrib.noNotes} />}
     </section>
   );
 }

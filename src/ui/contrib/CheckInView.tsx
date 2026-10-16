@@ -30,6 +30,8 @@ export function CheckInView(props: PhaseViewProps) {
         state={props.state}
         isFacilitator={props.isFacilitator}
         label="Responses"
+        emptyText={texts.contrib.noResponses}
+        emptyIcon="chat"
       />
     </section>
   );

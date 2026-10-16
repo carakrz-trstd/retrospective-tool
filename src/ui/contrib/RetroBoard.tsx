@@ -32,6 +32,7 @@ export function RetroBoard(props: PhaseViewProps) {
               state={props.state}
               isFacilitator={props.isFacilitator}
               label={col.name}
+              emptyText={texts.contrib.noEntries}
             />
           </section>
         ))}
