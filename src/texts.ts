@@ -178,6 +178,12 @@ export const texts = {
     timerLabel: 'Timer',
     controlsLabel: 'Facilitator controls',
     sessionSteps: 'Session steps',
+    sessionMenu: 'Session: overview, people and settings',
+    justBefore: 'Just before',
+    comingUp: 'Coming up',
+    startOfSession: 'Start of the session',
+    endOfSession: 'End of the session',
+    facilitatorNotes: 'Facilitator notes',
   },
   contrib: {
     add: 'Add',

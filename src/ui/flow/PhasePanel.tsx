@@ -22,7 +22,8 @@ export function PhasePanel(props: { stop: StopId; isFacilitator: boolean }) {
       <h3>{title}</h3>
       {oneLine && <p>{oneLine}</p>}
       {isFacilitator && (
-        <div class="facilitator-only">
+        <details class="facilitator-notes" open>
+          <summary>{texts.flow.facilitatorNotes}</summary>
           {!step && <p>{phase.instruction}</p>}
           {step && <p>{phase.instruction}</p>}
           {step && <p>{step.instruction}</p>}
@@ -36,7 +37,7 @@ export function PhasePanel(props: { stop: StopId; isFacilitator: boolean }) {
               </ul>
             </div>
           )}
-        </div>
+        </details>
       )}
     </section>
   );

@@ -1,9 +1,9 @@
 import { useApp } from '../../app/context';
 import { getPhaseControls } from '../../flow/registries';
-import { isRetro, next, prev } from '../../flow/stops';
+import { isRetro } from '../../flow/stops';
 import { texts } from '../../texts';
 
-/** Previous, Next, Reveal and the timer buttons, plus the controls other modules registered. */
+/** Reveal and the timer buttons (Previous and Next are in the step navigation), plus the controls other modules registered. */
 export function FacilitatorControls() {
   const app = useApp();
   const state = app.state.value;
@@ -16,17 +16,6 @@ export function FacilitatorControls() {
 
   return (
     <div class="facilitator-controls row" role="group" aria-label={texts.flow.controlsLabel}>
-      <button type="button" disabled={prev(stop) === stop} onClick={() => app.flowIntent('flow.prev')}>
-        {texts.flow.previous}
-      </button>
-      <button
-        type="button"
-        class="primary"
-        disabled={next(stop) === stop}
-        onClick={() => app.flowIntent('flow.next')}
-      >
-        {texts.flow.next}
-      </button>
       {revealKey && (
         <button
           type="button"

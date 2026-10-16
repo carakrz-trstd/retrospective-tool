@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { useApp } from '../../app/context';
 import type { AppController } from '../../app/AppController';
 import { getPhaseView } from '../../flow/registries';
-import { STOPS } from '../../flow/stops';
+import { stopToPhase } from '../../flow/stops';
 import { shouldPlay } from '../../flow/sound';
 import { TimerWatcher } from '../../flow/watcher';
 import { texts } from '../../texts';
@@ -13,6 +13,7 @@ import { PhasePanel } from './PhasePanel';
 import { ProgressOverview } from './ProgressOverview';
 import { ReviewActionsPanel } from './ReviewActionsPanel';
 import { SoundControls } from './SoundControls';
+import { StepHeader, StepNav } from './StepNav';
 import { TimerWidget } from './TimerWidget';
 
 /** Calls the beep once when the running timer of the current stop reaches zero (unless muted). */
@@ -34,8 +35,8 @@ function useTimerWatcher(app: AppController, flow: ReturnType<AppController['flo
   });
 }
 
-/** The guided session: steps, timer, instruction, content area and the Facilitator's controls. */
-export function FlowShell() {
+/** The page of the current step: where we are, the instruction, the timer, the work, and the way to the neighbouring steps. */
+export function FlowMain() {
   const app = useApp();
   const state = app.state.value;
   const flow = app.flowState();
@@ -49,32 +50,47 @@ export function FlowShell() {
   const showNote = isFacilitator && app.revealNoteStop.value === stop;
 
   return (
-    <div class="flow-shell">
-      <div class="flow-top row">
-        {isFacilitator ? (
-          <FacilitatorGuide />
-        ) : (
-          <p class="hint">{texts.flow.stepOf(STOPS.indexOf(stop) + 1, STOPS.length)}</p>
+    <div class="flow-main">
+      <StepHeader />
+      {/* a new page for each phase; the three retro steps share one page so nothing typed is lost */}
+      <div class="step-page" key={stopToPhase(stop)}>
+        <PhasePanel stop={stop} isFacilitator={isFacilitator} />
+        <TimerWidget />
+        {isFacilitator && <ContributionCounter stop={stop} />}
+        {isFacilitator && <FacilitatorControls />}
+        {showNote && (
+          <p class="note" role="status">
+            {texts.flow.revealNote}
+          </p>
         )}
+        <main id="session-content" aria-label="Session content" class="content-area">
+          {stop === 'reviewActions' ? (
+            <ReviewActionsPanel />
+          ) : (
+            <View
+              stop={stop}
+              state={state}
+              isFacilitator={isFacilitator}
+              revealed={flow.revealed[revealKey]}
+            />
+          )}
+        </main>
       </div>
-      {isFacilitator && <ProgressOverview />}
-      <PhasePanel stop={stop} isFacilitator={isFacilitator} />
-      <TimerWidget />
-      {isFacilitator && <ContributionCounter stop={stop} />}
-      {isFacilitator && <FacilitatorControls />}
-      {showNote && (
-        <p class="note" role="status">
-          {texts.flow.revealNote}
-        </p>
-      )}
-      <SoundControls isFacilitator={isFacilitator} />
-      <main id="session-content" aria-label="Session content" class="content-area">
-        {stop === 'reviewActions' ? (
-          <ReviewActionsPanel />
-        ) : (
-          <View stop={stop} state={state} isFacilitator={isFacilitator} revealed={flow.revealed[revealKey]} />
-        )}
-      </main>
+      <StepNav />
     </div>
+  );
+}
+
+/** What belongs to the session rather than to one step: the overview of all steps, sound and the guide. */
+export function FlowSide() {
+  const app = useApp();
+  if (!app.state.value) return null;
+  const isFacilitator = app.role.value === 'host';
+  return (
+    <>
+      {isFacilitator && <ProgressOverview />}
+      <SoundControls isFacilitator={isFacilitator} />
+      {isFacilitator && <FacilitatorGuide />}
+    </>
   );
 }

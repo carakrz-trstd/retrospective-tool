@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { ENTRY_MAX, normalizeText, truncate } from '../../contrib/limits';
 import type { Entry } from '../../contrib/types';
 import { texts } from '../../texts';
+import { Avatar } from '../Avatar';
 import { CharCounter } from './CharCounter';
 
 /** One entry with its author's name; the author can edit it in place, the author and the Facilitator delete it. */
@@ -49,7 +50,10 @@ export function EntryCard(props: {
       ) : (
         <>
           <p class="entry-text">{props.entry.text}</p>
-          <p class="entry-author hint">{props.authorName}</p>
+          <p class="entry-author hint">
+            <Avatar name={props.authorName} />
+            <span>{props.authorName}</span>
+          </p>
           <div class="row entry-actions">
             {props.canEdit && (
               <button

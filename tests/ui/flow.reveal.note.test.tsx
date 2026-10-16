@@ -30,8 +30,9 @@ describe('reveal note (AD-16)', () => {
   it('the note is not shown after the explicit Reveal button, and goes away when moving on', async () => {
     const { host } = await runningSession();
     host.t.app.flowIntent('flow.goto', { stop: 'retro.write' });
+    await host.q.findByRole('heading', { name: 'Retrospective: Write silently' });
     fireEvent.click(await host.q.findByRole('button', { name: 'Reveal' }));
-    await host.q.findByText(/Retrospective: Reveal/);
+    await host.q.findByRole('heading', { name: 'Retrospective: Reveal' });
     expect(host.q.queryByText('Everybody can now see the entries')).toBeNull();
     // the Reveal button is disabled once revealed
     expect((host.q.getByRole('button', { name: 'Reveal' }) as HTMLButtonElement).disabled).toBe(true);

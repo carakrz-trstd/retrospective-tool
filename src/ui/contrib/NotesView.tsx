@@ -5,6 +5,7 @@ import { getContribView, type NoteItem } from '../../contrib/types';
 import { createUuid } from '../../core/ids';
 import type { PhaseViewProps } from '../../flow/registries';
 import { texts } from '../../texts';
+import { Avatar } from '../Avatar';
 import { CharCounter } from './CharCounter';
 import { EntryComposer } from './EntryComposer';
 import { byCreated, nameOf } from './names';
@@ -50,7 +51,10 @@ function NoteCard(props: { note: NoteItem; authorName: string; isFacilitator: bo
       ) : (
         <>
           <p class="entry-text">{note.text}</p>
-          <p class="entry-author hint">{props.authorName}</p>
+          <p class="entry-author hint">
+            <Avatar name={props.authorName} />
+            <span>{props.authorName}</span>
+          </p>
           <div class="row entry-actions">
             <button
               type="button"

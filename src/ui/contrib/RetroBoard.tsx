@@ -16,8 +16,8 @@ export function RetroBoard(props: PhaseViewProps) {
       <RejectedNotice />
       {!props.revealed && <p class="hint">{texts.contrib.hiddenHint}</p>}
       <div class="retro-board">
-        {props.state.format.columns.map((col) => (
-          <section class="retro-column" key={col.id} aria-labelledby={`col-${col.id}`}>
+        {props.state.format.columns.map((col, index) => (
+          <section class="retro-column" data-color={index % 5} key={col.id} aria-labelledby={`col-${col.id}`}>
             <h4 id={`col-${col.id}`}>{col.name}</h4>
             {col.prompt && <p class="hint">{col.prompt}</p>}
             <EntryComposer
